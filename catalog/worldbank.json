@@ -1,0 +1,299 @@
+{
+  "source": {
+    "name": "World Bank Indicators API",
+    "category": "macroeconomic",
+    "description": "Global development indicators across 200+ countries. Covers GDP, inflation, unemployment, trade, education, health, environment, and more.",
+    "documentation": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392",
+    "status": "active",
+    "replaces": "OECD Stats (API deprecated 2024)"
+  },
+  "authentication": {
+    "type": "none",
+    "required": false,
+    "notes": "Fully public API, no key needed"
+  },
+  "api": {
+    "base_url": "https://api.worldbank.org/v2",
+    "format": "REST/JSON"
+  },
+  "endpoints": [
+    {
+      "name": "indicator_data",
+      "method": "GET",
+      "path": "/country/{country_codes}/indicator/{indicator_code}",
+      "description": "Fetch any indicator for any country or all countries",
+      "parameters": {
+        "country_codes": {
+          "type": "string",
+          "description": "ISO 2-letter codes, semicolon-separated. Use 'all' for all countries.",
+          "examples": {
+            "single": "US",
+            "multiple": "US;GB;DE;FR;JP;CN;CA;AU;BR;IN",
+            "all_countries": "all"
+          }
+        },
+        "indicator_code": {
+          "type": "string",
+          "description": "World Bank indicator code",
+          "available_indicators": {
+            "GDP": {
+              "NY.GDP.MKTP.CD": "GDP (current USD)",
+              "NY.GDP.MKTP.KD.ZG": "GDP Growth Rate %",
+              "NY.GDP.PCAP.CD": "GDP per Capita (USD)",
+              "NY.GDP.PCAP.KD.ZG": "GDP per Capita Growth %"
+            },
+            "INFLATION": {
+              "FP.CPI.TOTL.ZG": "Inflation CPI %",
+              "NY.GDP.DEFL.KD.ZG": "GDP Deflator %"
+            },
+            "LABOR": {
+              "SL.UEM.TOTL.ZS": "Unemployment % labor force",
+              "SL.TLF.TOTL.IN": "Total Labor Force",
+              "SL.EMP.TOTL.SP.ZS": "Employment to Population %"
+            },
+            "TRADE": {
+              "NE.TRD.GNFS.ZS": "Trade % of GDP",
+              "BX.KLT.DINV.WD.GD.ZS": "FDI Inflows % GDP",
+              "TX.VAL.MRCH.CD.WT": "Merchandise Exports USD"
+            },
+            "GOVERNMENT": {
+              "GC.DOD.TOTL.GD.ZS": "Government Debt % GDP",
+              "GC.REV.XGRT.GD.ZS": "Government Revenue % GDP",
+              "GC.XPN.TOTL.GD.ZS": "Government Expenditure % GDP"
+            },
+            "POPULATION": {
+              "SP.POP.TOTL": "Total Population",
+              "SP.POP.GROW": "Population Growth %",
+              "SP.URB.TOTL.IN.ZS": "Urban Population %"
+            },
+            "FINANCIAL": {
+              "CM.MKT.LCAP.GD.ZS": "Market Capitalization % GDP",
+              "FS.AST.DOMS.GD.ZS": "Domestic Credit % GDP",
+              "FR.INR.LEND": "Lending Interest Rate %"
+            },
+            "ENERGY": {
+              "EG.USE.PCAP.KG.OE": "Energy Use per Capita",
+              "EG.ELC.ACCS.ZS": "Access to Electricity %"
+            },
+            "ENVIRONMENT": {
+              "EN.ATM.CO2E.PC": "CO2 Emissions per Capita",
+              "AG.LND.FRST.ZS": "Forest Area %"
+            },
+            "HEALTH": {
+              "SP.DYN.LE00.IN": "Life Expectancy at Birth",
+              "SH.XPD.CHEX.GD.ZS": "Health Expenditure % GDP"
+            },
+            "EDUCATION": {
+              "SE.XPD.TOTL.GD.ZS": "Education Expenditure % GDP",
+              "SE.ADT.LITR.ZS": "Adult Literacy Rate %"
+            },
+            "ALL_INDICATORS": "https://data.worldbank.org/indicator"
+          }
+        },
+        "format": {
+          "type": "string",
+          "value": "json",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "format": "YYYY:YYYY",
+          "example": "2000:2024",
+          "description": "Date range filter"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 50,
+          "maximum": 20000,
+          "description": "Records per page - use 20000 for full datasets"
+        },
+        "page": {
+          "type": "integer",
+          "default": 1,
+          "description": "Page number for pagination"
+        },
+        "mrv": {
+          "type": "integer",
+          "description": "Most Recent Values - get last N years",
+          "example": 10
+        }
+      }
+    },
+    {
+      "name": "list_indicators",
+      "method": "GET",
+      "path": "/indicator",
+      "description": "List ALL available indicators",
+      "example": "https://api.worldbank.org/v2/indicator?format=json&per_page=20000"
+    },
+    {
+      "name": "list_countries",
+      "method": "GET",
+      "path": "/country",
+      "description": "List ALL available countries with metadata",
+      "example": "https://api.worldbank.org/v2/country?format=json&per_page=500"
+    },
+    {
+      "name": "country_metadata",
+      "method": "GET",
+      "path": "/country/{country_code}",
+      "description": "Get metadata for a specific country",
+      "example": "https://api.worldbank.org/v2/country/US?format=json"
+    }
+  ],
+  "countries": {
+    "total": "200+",
+    "examples": [
+      "US - United States",
+      "GB - United Kingdom",
+      "DE - Germany",
+      "FR - France",
+      "JP - Japan",
+      "CN - China",
+      "IN - India",
+      "BR - Brazil",
+      "CA - Canada",
+      "AU - Australia",
+      "KR - South Korea",
+      "MX - Mexico",
+      "ZA - South Africa"
+    ],
+    "regions": {
+      "EAS": "East Asia & Pacific",
+      "ECS": "Europe & Central Asia",
+      "LCN": "Latin America & Caribbean",
+      "MEA": "Middle East & North Africa",
+      "NAC": "North America",
+      "SAS": "South Asia",
+      "SSF": "Sub-Saharan Africa"
+    },
+    "full_list": "https://api.worldbank.org/v2/country?format=json&per_page=500"
+  },
+  "historical_depth": {
+    "start": "1960 (some indicators)",
+    "end": "present",
+    "notes": "Most indicators available from 1990+. Some go back to 1960."
+  },
+  "update_frequency": {
+    "notes": "Annual for most indicators",
+    "quarterly": "Some financial indicators",
+    "annual": "Most development indicators",
+    "latency": "1-2 years lag for official statistics"
+  },
+  "rate_limits": {
+    "notes": "No official rate limit",
+    "recommended": "1-2 requests per second",
+    "timeout": "30-60 seconds for large queries"
+  },
+  "error_handling": {
+    "400": "Bad request - check indicator code and country code",
+    "404": "Not found - verify endpoint path",
+    "429": "Rate limited - wait 60s",
+    "notes": "Check data[0].message for API-level errors"
+  },
+  "example_request": {
+    "description": "Get GDP for all countries 2000-2024",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json&date=2000:2024&per_page=20000",
+    "curl": "curl 'https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json&date=2000:2024&per_page=20000'"
+  },
+  "example_response": [
+    {
+      "pages": 1,
+      "per_page": 50,
+      "total": 6650,
+      "lastupdated": "2024-04-29"
+    },
+    [
+      {
+        "country": {
+          "id": "US",
+          "value": "United States"
+        },
+        "indicator": {
+          "id": "NY.GDP.MKTP.CD",
+          "value": "GDP (current US$)"
+        },
+        "date": "2023",
+        "value": 27360935000000,
+        "unit": "",
+        "obs_status": "",
+        "decimal": 0
+      }
+    ]
+  ],
+  "parsing_rules": {
+    "format": "JSON",
+    "complexity": "LOW",
+    "steps": {
+      "1": "Response is array of 2 items: [metadata, data]",
+      "2": "data = response[1] - list of records",
+      "3": "Each record has: country.id, country.value, date, value",
+      "4": "Filter out records where value is null",
+      "5": "Handle pagination: check response[0].pages > 1"
+    },
+    "pagination": "Use per_page=20000 to avoid pagination for most indicators",
+    "null_handling": "value field can be null - filter these out"
+  },
+  "cli_parameters": {
+    "required": ["indicators"],
+    "optional": {
+      "indicators": {
+        "format": "comma-separated World Bank indicator codes",
+        "example": "NY.GDP.MKTP.CD,FP.CPI.TOTL.ZG"
+      },
+      "countries": {
+        "default": "all",
+        "format": "comma-separated ISO2 codes or 'all'",
+        "example": "US;GB;DE or all"
+      },
+      "start": {
+        "default": "2000",
+        "format": "YYYY"
+      },
+      "end": {
+        "default": "present",
+        "format": "YYYY"
+      }
+    },
+    "example_call": "python agent.py --source worldbank --indicators \"NY.GDP.MKTP.CD,FP.CPI.TOTL.ZG\" --countries \"all\" --start 2000 --output-both"
+  },
+  "output_schema": {
+    "format": "CSV",
+    "fields": [
+      {
+        "name": "country_code",
+        "type": "string",
+        "example": "US"
+      },
+      {
+        "name": "country_name",
+        "type": "string",
+        "example": "United States"
+      },
+      {
+        "name": "indicator_code",
+        "type": "string",
+        "example": "NY.GDP.MKTP.CD"
+      },
+      {
+        "name": "indicator_name",
+        "type": "string",
+        "example": "GDP (current USD)"
+      },
+      {
+        "name": "year",
+        "type": "integer"
+      },
+      {
+        "name": "value",
+        "type": "float"
+      }
+    ]
+  },
+  "storage": {
+    "path": "hdd/worldbank/{indicator_code}/{year}.csv",
+    "format": "CSV",
+    "partitioning": "by_indicator"
+  },
+  "agent_instructions": "To fetch ANY World Bank indicator for ANY country:\n1. Build URL: /country/{countries}/indicator/{code}?format=json&date=2000:2024&per_page=20000\n2. Parse response[1] for data records\n3. Filter null values\n4. Handle pagination if response[0].pages > 1\n5. Save as CSV\n\nTo discover available indicators:\n- Browse: https://data.worldbank.org/indicator\n- API: /indicator?format=json&per_page=20000\n\nExample: \"I want CO2 emissions for all countries since 1990\"\n- indicator: EN.ATM.CO2E.PC\n- countries: all\n- date: 1990:2024\n- URL: /country/all/indicator/EN.ATM.CO2E.PC?format=json&date=1990:2024&per_page=20000\n"
+}

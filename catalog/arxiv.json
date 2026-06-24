@@ -1,0 +1,257 @@
+{
+  "source": {
+    "name": "arXiv API",
+    "category": "research_publications",
+    "description": "Open access research papers across physics, math, CS, economics, biology, and more. Track publication cadence, topics, word counts from titles/abstracts.",
+    "documentation": "https://arxiv.org/help/api/user-manual",
+    "status": "active"
+  },
+  "authentication": {
+    "type": "none",
+    "required": false,
+    "notes": "Fully public API, no key needed"
+  },
+  "api": {
+    "base_url": "http://export.arxiv.org/api",
+    "format": "Atom XML / JSON",
+    "notes": "Primary API returns Atom XML. Use feedparser library or parse manually."
+  },
+  "endpoints": [
+    {
+      "name": "search",
+      "method": "GET",
+      "path": "/query",
+      "description": "Search and retrieve papers with full metadata",
+      "parameters": {
+        "search_query": {
+          "type": "string",
+          "required": true,
+          "description": "Boolean search query - very flexible",
+          "syntax": {
+            "field_prefixes": {
+              "ti": "title",
+              "au": "author",
+              "abs": "abstract",
+              "cat": "category",
+              "all": "all fields"
+            },
+            "operators": [
+              "AND",
+              "OR",
+              "ANDNOT"
+            ]
+          },
+          "examples": {
+            "all_papers": "all:*",
+            "by_category": "cat:cs.AI",
+            "by_keyword_in_title": "ti:housing+AND+ti:market",
+            "by_keyword_in_abstract": "abs:inflation+AND+abs:monetary+policy",
+            "by_author": "au:Hinton",
+            "combined": "cat:econ.GN+AND+abs:housing"
+          },
+          "available_categories": {
+            "cs": {
+              "cs.AI": "Artificial Intelligence",
+              "cs.LG": "Machine Learning",
+              "cs.CV": "Computer Vision",
+              "cs.CL": "Computation and Language (NLP)",
+              "cs.RO": "Robotics",
+              "cs.CR": "Cryptography and Security"
+            },
+            "econ": {
+              "econ.EM": "Econometrics",
+              "econ.GN": "General Economics",
+              "econ.TH": "Theoretical Economics"
+            },
+            "q-fin": {
+              "q-fin.EC": "Economics",
+              "q-fin.PM": "Portfolio Management",
+              "q-fin.RM": "Risk Management",
+              "q-fin.TR": "Trading and Market Microstructure",
+              "q-fin.ST": "Statistical Finance"
+            },
+            "physics": {
+              "physics.data-an": "Data Analysis",
+              "cond-mat": "Condensed Matter"
+            },
+            "math": {
+              "math.ST": "Statistics Theory",
+              "math.PR": "Probability"
+            },
+            "stat": {
+              "stat.ML": "Machine Learning",
+              "stat.AP": "Applications"
+            },
+            "ALL_CATEGORIES": "See https://arxiv.org/category_taxonomy"
+          }
+        },
+        "start": {
+          "type": "integer",
+          "description": "Pagination offset (0-indexed)",
+          "default": 0
+        },
+        "max_results": {
+          "type": "integer",
+          "description": "Results per page",
+          "maximum": 2000,
+          "default": 10,
+          "notes": "Use pagination for large datasets"
+        },
+        "sortBy": {
+          "type": "enum",
+          "values": [
+            "relevance",
+            "lastUpdatedDate",
+            "submittedDate"
+          ],
+          "default": "submittedDate"
+        },
+        "sortOrder": {
+          "type": "enum",
+          "values": [
+            "ascending",
+            "descending"
+          ],
+          "default": "descending"
+        },
+        "id_list": {
+          "type": "string",
+          "description": "Comma-separated list of specific arXiv IDs",
+          "example": "2301.07543,2302.04761"
+        }
+      }
+    }
+  ],
+  "historical_depth": {
+    "start": "1991-08-01",
+    "end": "present",
+    "notes": "arXiv launched August 1991. Full history available."
+  },
+  "update_frequency": "daily (new papers submitted daily)",
+  "latency": "Papers appear within 24-48 hours of submission",
+  "rate_limits": {
+    "requests_per_second": 3,
+    "notes": "arXiv requests max 1 request per 3 seconds",
+    "burst": false,
+    "sleep_between_requests": "1-3 seconds recommended",
+    "max_results_per_request": 2000,
+    "pagination_required": "Yes for large datasets"
+  },
+  "error_handling": {
+    "400": "Bad search query - check syntax",
+    "503": "Service unavailable - retry after 60s",
+    "notes": "Always implement delays between requests to respect arXiv policy"
+  },
+  "example_request": {
+    "description": "Get latest 100 AI papers with submission dates",
+    "url": "http://export.arxiv.org/api/query?search_query=cat:cs.AI&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending",
+    "curl": "curl 'http://export.arxiv.org/api/query?search_query=cat:cs.AI&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending'"
+  },
+  "example_response_atom": {
+    "note": "Response is Atom XML",
+    "structure": "<feed>\n  <entry>\n    <id>http://arxiv.org/abs/2301.07543v1</id>\n    <title>Attention Is All You Need</title>\n    <summary>Abstract text here...</summary>\n    <published>2023-01-18T00:00:00Z</published>\n    <updated>2023-01-20T00:00:00Z</updated>\n    <author><name>John Doe</name></author>\n    <category term=\"cs.AI\"/>\n    <arxiv:primary_category term=\"cs.LG\"/>\n  </entry>\n</feed>\n"
+  },
+  "parsing_rules": {
+    "format": "Atom XML",
+    "library": "feedparser (pip install feedparser)",
+    "steps": {
+      "1": "Use feedparser.parse(url) to get structured dict",
+      "2": "Access feed.entries for list of papers",
+      "3": "entry.id = arXiv ID URL",
+      "4": "entry.title = paper title",
+      "5": "entry.summary = abstract",
+      "6": "entry.published = submission date (ISO format)",
+      "7": "entry.tags = list of categories",
+      "8": "Count words in title: len(entry.title.split())",
+      "9": "Count words in abstract: len(entry.summary.split())"
+    },
+    "derived_fields": {
+      "title_word_count": "len(title.split())",
+      "abstract_word_count": "len(abstract.split())",
+      "arxiv_id": "entry.id.split('/')[-1]",
+      "primary_category": "entry.arxiv_primary_category.term"
+    }
+  },
+  "cli_parameters": {
+    "required": [],
+    "optional": {
+      "category": {
+        "format": "arXiv category code",
+        "example": "cs.AI"
+      },
+      "keyword": {
+        "format": "keyword searched in abstract",
+        "example": "housing"
+      },
+      "start": {
+        "default": null,
+        "format": "YYYY-MM-DD",
+        "description": "Filter papers submitted on or after this date"
+      },
+      "max_results": {
+        "default": 100,
+        "format": "integer",
+        "maximum": 2000
+      }
+    },
+    "example_call": "python agent.py --source arxiv --category cs.AI --keyword housing --start 2020-01-01 --output-both"
+  },
+  "output_schema": {
+    "format": "CSV",
+    "fields": [
+      {
+        "name": "arxiv_id",
+        "type": "string",
+        "example": "2301.07543"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "abstract",
+        "type": "text"
+      },
+      {
+        "name": "submitted_date",
+        "type": "date",
+        "format": "YYYY-MM-DD"
+      },
+      {
+        "name": "updated_date",
+        "type": "date",
+        "format": "YYYY-MM-DD"
+      },
+      {
+        "name": "authors",
+        "type": "string",
+        "notes": "Pipe-separated list"
+      },
+      {
+        "name": "primary_category",
+        "type": "string",
+        "example": "cs.AI"
+      },
+      {
+        "name": "all_categories",
+        "type": "string",
+        "notes": "Pipe-separated list"
+      },
+      {
+        "name": "title_word_count",
+        "type": "integer"
+      },
+      {
+        "name": "abstract_word_count",
+        "type": "integer"
+      }
+    ]
+  },
+  "storage": {
+    "path": "hdd/arxiv/{category}/{year}.csv",
+    "format": "CSV",
+    "partitioning": "by_category_and_year",
+    "notes": "One row per paper"
+  },
+  "agent_instructions": "To track ANY research topic or category:\n1. Choose search_query using field prefixes (ti:, abs:, cat:, au:)\n2. Use pagination (start=0, 2000, 4000...) for large datasets\n3. Sleep 3 seconds between requests (arXiv policy)\n4. Parse Atom XML with feedparser library\n5. Extract title, abstract, dates, categories\n6. Compute word counts from title and abstract\n7. Backfill from 1991 using date sorting\nExample: \"Track AI papers mentioning housing since 2000\"\n  - search_query: \"cat:cs.AI+AND+abs:housing\"\n  - Paginate through all results\n  - Extract publication cadence per month/year\nExample: \"Count economics papers per month since 2010\"\n  - search_query: \"cat:econ.GN\"\n  - sortBy: submittedDate, sortOrder: ascending\n  - Paginate, group by month, count papers\n"
+}

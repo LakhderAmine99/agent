@@ -1,0 +1,257 @@
+{
+  "source": {
+    "name": "IMF Data (International Monetary Fund)",
+    "category": "macroeconomic",
+    "description": "Global economic and financial statistics across 190+ countries",
+    "documentation": "https://datahelp.imf.org/knowledgebase/articles/667681",
+    "status": "active"
+  },
+  "authentication": {
+    "type": "none",
+    "required": false,
+    "notes": "Fully public API, no key needed"
+  },
+  "api": {
+    "base_url": "https://www.imf.org/external/datamapper/api/v1",
+    "format": "REST/JSON",
+    "notes": "IMF DataMapper API - simpler than SDMX, returns clean JSON",
+    "old_url_deprecated": "http://dataservices.imf.org/REST/SDMX_JSON.svc (DEAD)"
+  },
+  "endpoints": [
+    {
+      "name": "list_indicators",
+      "method": "GET",
+      "path": "/indicators",
+      "description": "List ALL available IMF indicators",
+      "example": "https://www.imf.org/external/datamapper/api/v1/indicators"
+    },
+    {
+      "name": "get_indicator_data",
+      "method": "GET",
+      "path": "/{indicator_code}",
+      "description": "Get data for a specific indicator - ALL countries ALL years",
+      "example": "https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH"
+    },
+    {
+      "name": "get_indicator_for_country",
+      "method": "GET",
+      "path": "/{indicator_code}/{country_code}",
+      "description": "Get data for specific indicator + specific country",
+      "example": "https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH/USA"
+    },
+    {
+      "name": "compact_data_legacy",
+      "method": "GET",
+      "path": "/CompactData/{database_id}/{frequency}.{countries}.{indicators}",
+      "description": "LEGACY - may still work for some databases",
+      "status": "DEPRECATED - use DataMapper API instead",
+      "parameters": {
+        "database_id": {
+          "type": "string",
+          "required": true,
+          "available_databases": {
+            "IFS": "International Financial Statistics (main macro database)",
+            "WEO": "World Economic Outlook (GDP, inflation, current account)",
+            "GFSR": "Global Financial Stability Report",
+            "DOT": "Direction of Trade Statistics (bilateral trade flows)",
+            "BOP": "Balance of Payments Statistics",
+            "FISCAL_MONITOR": "Fiscal Monitor (government debt, deficits)",
+            "FSI": "Financial Soundness Indicators (banking sector)",
+            "PCPS": "Primary Commodity Price System (commodities)",
+            "DOTS": "Direction of Trade Statistics",
+            "CPIS": "Coordinated Portfolio Investment Survey",
+            "COFER": "Currency Composition of Official Foreign Exchange Reserves",
+            "SDR": "Special Drawing Rights",
+            "CPI": "Consumer Price Index"
+          }
+        },
+        "frequency": {
+          "type": "string",
+          "values": [
+            "A=Annual",
+            "Q=Quarterly",
+            "M=Monthly"
+          ],
+          "example": "M"
+        },
+        "countries": {
+          "type": "string",
+          "description": "ISO 2-letter country codes, + separated",
+          "examples": {
+            "single": "US",
+            "multiple": "US+GB+DE+FR+JP",
+            "all": "leave blank for all countries"
+          },
+          "all_countries": "190+ IMF member countries"
+        },
+        "indicators": {
+          "type": "string",
+          "description": "Indicator codes from DataStructure endpoint",
+          "ifs_examples": {
+            "NGDP_R": "GDP Volume",
+            "PCPI_PC_CP_A_PT": "CPI Inflation Rate",
+            "LUR": "Unemployment Rate",
+            "FPOLM_PA": "Policy Interest Rate",
+            "ENDA_XDC_USD_RATE": "Exchange Rate to USD",
+            "BCA_BP6_USD": "Current Account Balance",
+            "GGX_NGDP": "Government Expenditure % GDP",
+            "GGXWDG_NGDP": "Gross Government Debt % GDP"
+          },
+          "weo_examples": {
+            "NGDP": "Nominal GDP",
+            "NGDPD": "Nominal GDP in USD",
+            "PCPI": "Consumer Price Inflation",
+            "LUR": "Unemployment Rate",
+            "BCA": "Current Account Balance"
+          }
+        },
+        "startPeriod": {
+          "type": "string",
+          "format": "YYYY or YYYY-QN or YYYY-MM",
+          "example": "2000"
+        },
+        "endPeriod": {
+          "type": "string",
+          "format": "YYYY or YYYY-QN or YYYY-MM",
+          "example": "2026"
+        }
+      }
+    }
+  ],
+  "countries": {
+    "note": "190+ IMF member countries",
+    "major_examples": [
+      "US - United States",
+      "GB - United Kingdom",
+      "DE - Germany",
+      "FR - France",
+      "JP - Japan",
+      "CN - China",
+      "IN - India",
+      "BR - Brazil",
+      "CA - Canada",
+      "AU - Australia",
+      "KR - Korea",
+      "MX - Mexico",
+      "RU - Russia",
+      "ZA - South Africa"
+    ],
+    "full_list": "Call /DataStructure/{database_id} and extract CL_AREA_IFS codes"
+  },
+  "historical_depth": {
+    "start": "1948 (IFS goes back furthest)",
+    "end": "present",
+    "notes": "IFS from 1948, WEO from 1980, most datasets from 1990+"
+  },
+  "update_frequency": {
+    "IFS": "monthly",
+    "WEO": "bi-annual (April + October)",
+    "DOT": "monthly",
+    "FISCAL_MONITOR": "bi-annual",
+    "PCPS": "monthly"
+  },
+  "rate_limits": {
+    "notes": "No official limit but API can be slow",
+    "recommended": "1-2 requests per second",
+    "timeout": "Large queries may take 30-120 seconds",
+    "max_series_per_request": "~10,000 series recommended"
+  },
+  "error_handling": {
+    "400": "Bad request - check database_id and indicator codes",
+    "404": "Not found - verify endpoint path",
+    "503": "Server busy - retry after 60s",
+    "notes": "IMF API can be unstable, always implement retry logic"
+  },
+  "example_request": {
+    "description": "Get GDP growth rate (NGDP_RPCH) for all countries, all years",
+    "url": "https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH",
+    "curl": "curl 'https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH'"
+  },
+  "example_response": {
+    "values": {
+      "NGDP_RPCH": {
+        "US": {
+          "2020": 2.3,
+          "2021": 5.7
+        }
+      }
+    }
+  },
+  "parsing_rules": {
+    "format": "DataMapper JSON",
+    "complexity": "LOW",
+    "structure": "values.{indicator_code}.{country_iso3}.{year} = value",
+    "steps": {
+      "1": "Access values.{indicator_code} (a dict keyed by ISO3 country code)",
+      "2": "For each country, iterate its {year: value} dict",
+      "3": "Filter years by the requested start/end range",
+      "4": "Skip null values (missing data points)",
+      "5": "Map ISO2 input codes to ISO3 keys before filtering by country"
+    },
+    "gotchas": [
+      "Country keys are ISO3 (USA, GBR), not ISO2 (US, GB) - convert before matching",
+      "Aggregate regions (e.g. WEOWORLD) appear as keys alongside countries",
+      "Values may be null for years with no data - skip them",
+      "Years are string keys ('2020'), cast as needed"
+    ]
+  },
+  "cli_parameters": {
+    "required": ["indicators"],
+    "optional": {
+      "indicators": {
+        "format": "comma-separated IMF DataMapper codes",
+        "example": "NGDP_RPCH,LUR,PCPIPCH"
+      },
+      "countries": {
+        "default": "all",
+        "format": "comma-separated ISO2 codes",
+        "example": "US,GB,DE"
+      },
+      "start": {
+        "default": "2000",
+        "format": "YYYY"
+      },
+      "end": {
+        "default": "present",
+        "format": "YYYY"
+      }
+    },
+    "example_call": "python agent.py --source imf --indicators \"NGDP_RPCH,LUR\" --countries \"US,GB,DE\" --start 2000 --output-both"
+  },
+  "output_schema": {
+    "format": "CSV",
+    "fields": [
+      {
+        "name": "country",
+        "type": "string",
+        "example": "USA"
+      },
+      {
+        "name": "indicator_code",
+        "type": "string",
+        "example": "NGDP_RPCH"
+      },
+      {
+        "name": "indicator_name",
+        "type": "string",
+        "example": "GDP Growth Rate %"
+      },
+      {
+        "name": "year",
+        "type": "string",
+        "example": "2020"
+      },
+      {
+        "name": "value",
+        "type": "float",
+        "example": 2.3
+      }
+    ]
+  },
+  "storage": {
+    "path": "hdd/imf/{database_id}/{country}/{indicator}.csv",
+    "format": "CSV",
+    "partitioning": "by_database_country_indicator"
+  },
+  "agent_instructions": "IMF DataMapper API is currently returning HTTP 403 for automated requests (server-side block, outside our control). Use --source worldbank with the equivalent indicator code from imf_to_worldbank_mapping in index.json. Example: instead of --source imf --indicators NGDP_RPCH, use --source worldbank --indicators NY.GDP.MKTP.KD.ZG. The imf source will emit a fallback note row pointing to this mapping."
+}

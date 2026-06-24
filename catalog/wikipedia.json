@@ -1,0 +1,219 @@
+{
+  "source": {
+    "name": "Wikipedia Pageviews API",
+    "category": "web_traffic",
+    "description": "Daily pageview statistics for ANY Wikipedia article across all languages",
+    "documentation": "https://wikimedia.org/api/rest_v1/#/Pageviews%20data",
+    "status": "active"
+  },
+  "authentication": {
+    "type": "none",
+    "required": false,
+    "notes": "Fully public API, no key needed"
+  },
+  "api": {
+    "base_url": "https://wikimedia.org/api/rest_v1/metrics/pageviews",
+    "format": "REST/JSON"
+  },
+  "endpoints": [
+    {
+      "name": "per_article_daily",
+      "method": "GET",
+      "path": "/per-article/{project}/{access}/{agents}/{article}/daily/{start}/{end}",
+      "description": "Daily pageviews for ANY specific Wikipedia article",
+      "parameters": {
+        "project": {
+          "type": "string",
+          "required": true,
+          "values": [
+            "en.wikipedia",
+            "fr.wikipedia",
+            "de.wikipedia",
+            "es.wikipedia",
+            "300+ language wikis"
+          ],
+          "default": "en.wikipedia"
+        },
+        "access": {
+          "type": "enum",
+          "required": true,
+          "values": [
+            "all-access",
+            "desktop",
+            "mobile-app",
+            "mobile-web"
+          ],
+          "default": "all-access"
+        },
+        "agents": {
+          "type": "enum",
+          "required": true,
+          "values": [
+            "all-agents",
+            "user",
+            "spider",
+            "automated"
+          ],
+          "default": "all-agents"
+        },
+        "article": {
+          "type": "string",
+          "required": true,
+          "description": "ANY Wikipedia article title, URL-encoded, underscores for spaces",
+          "examples": [
+            "Inflation",
+            "Real_estate",
+            "Federal_Reserve",
+            "Bitcoin",
+            "Housing_market",
+            "Interest_rate",
+            "Unemployment"
+          ]
+        },
+        "start": {
+          "type": "string",
+          "format": "YYYYMMDD",
+          "minimum": "20150701"
+        },
+        "end": {
+          "type": "string",
+          "format": "YYYYMMDD"
+        }
+      }
+    },
+    {
+      "name": "top_articles",
+      "method": "GET",
+      "path": "/top/{project}/{access}/{year}/{month}/{day}",
+      "description": "Top 1000 most viewed articles for a given day",
+      "parameters": {
+        "project": {
+          "type": "string",
+          "default": "en.wikipedia"
+        },
+        "access": {
+          "type": "enum",
+          "values": [
+            "all-access",
+            "desktop",
+            "mobile-app",
+            "mobile-web"
+          ]
+        },
+        "year": {
+          "type": "string",
+          "format": "YYYY"
+        },
+        "month": {
+          "type": "string",
+          "format": "MM"
+        },
+        "day": {
+          "type": "string",
+          "format": "DD"
+        }
+      }
+    },
+    {
+      "name": "aggregate_daily",
+      "method": "GET",
+      "path": "/aggregate/{project}/{access}/{agents}/daily/{start}/{end}",
+      "description": "Total pageviews across ALL Wikipedia articles"
+    }
+  ],
+  "historical_depth": {
+    "start": "2015-07-01",
+    "end": "present",
+    "notes": "No data available before July 2015"
+  },
+  "update_frequency": "daily",
+  "latency": "~1 hour after midnight UTC",
+  "rate_limits": {
+    "requests_per_second": 5,
+    "burst": true,
+    "retry_after": "Retry-After header when 429"
+  },
+  "error_handling": {
+    "404": "Article not found - check title spelling and URL encoding",
+    "429": "Rate limited - exponential backoff, wait 60s minimum",
+    "500": "Server error - retry after 120s"
+  },
+  "example_request": {
+    "url": "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Inflation/daily/20150701/20260618",
+    "curl": "curl -H 'User-Agent: MyBot/1.0' 'https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Inflation/daily/20200101/20260618'"
+  },
+  "example_response": {
+    "items": [
+      {
+        "project": "en.wikipedia",
+        "article": "Inflation",
+        "granularity": "daily",
+        "timestamp": "2020010100",
+        "access": "all-access",
+        "agent": "all-agents",
+        "views": 12543
+      }
+    ]
+  },
+  "parsing_rules": {
+    "extract_path": "items[*]",
+    "timestamp_field": "timestamp",
+    "timestamp_format": "YYYYMMDDHH -> YYYY-MM-DD (drop last 2 chars)",
+    "value_field": "views",
+    "flatten": true
+  },
+  "cli_parameters": {
+    "required": ["articles"],
+    "optional": {
+      "articles": {
+        "format": "comma-separated Wikipedia titles (underscores for spaces)",
+        "example": "Inflation,Housing_market"
+      },
+      "start": {
+        "default": "2015-07-01",
+        "format": "YYYY-MM-DD"
+      },
+      "end": {
+        "default": "today",
+        "format": "YYYY-MM-DD"
+      }
+    },
+    "example_call": "python agent.py --source wikipedia --articles \"Inflation,Housing_market\" --start 2020-01-01 --end 2024-12-31 --output-both"
+  },
+  "output_schema": {
+    "format": "CSV",
+    "fields": [
+      {
+        "name": "article",
+        "type": "string"
+      },
+      {
+        "name": "date",
+        "type": "date",
+        "format": "YYYY-MM-DD"
+      },
+      {
+        "name": "views",
+        "type": "integer"
+      },
+      {
+        "name": "project",
+        "type": "string"
+      },
+      {
+        "name": "access",
+        "type": "string"
+      },
+      {
+        "name": "agent",
+        "type": "string"
+      }
+    ]
+  },
+  "storage": {
+    "path": "hdd/wikipedia/pageviews/{article}/{year}.csv",
+    "format": "CSV",
+    "partitioning": "by_article_and_year"
+  },
+  "agent_instructions": "To fetch pageviews for ANY Wikipedia article:\n1. URL-encode the article title (spaces become underscores)\n2. Call per_article_daily endpoint with desired date range\n3. Extract items[*].views and items[*].timestamp\n4. Convert timestamp YYYYMMDDHH to YYYY-MM-DD\nExample: want \"housing market\" data?\n  - Title = \"Housing_market\"\n  - Call API with start=20150701, end=today\n  - Parse views per day\nTo get TOP articles for a given day:\n  - Use top_articles endpoint\n  - Returns ranked list of 1000 most viewed pages\n"
+}

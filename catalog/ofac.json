@@ -1,0 +1,295 @@
+{
+  "source": {
+    "name": "OFAC SDN List (Office of Foreign Assets Control)",
+    "category": "sanctions_compliance",
+    "description": "Specially Designated Nationals and Blocked Persons List. Complete list of individuals, entities, and countries sanctioned by the US Treasury Department.",
+    "documentation": "https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists",
+    "status": "active"
+  },
+  "authentication": {
+    "type": "none",
+    "required": false,
+    "notes": "Fully public data, no key needed"
+  },
+  "api": {
+    "base_url": "https://www.treasury.gov/ofac/downloads",
+    "format": "XML / CSV / JSON",
+    "notes": "OFAC provides bulk file downloads updated daily. No REST API — direct file download."
+  },
+  "endpoints": [
+    {
+      "name": "sdn_xml",
+      "method": "GET",
+      "path": "https://www.treasury.gov/ofac/downloads/sdn.xml",
+      "description": "Full SDN list in XML format (most complete)",
+      "update_frequency": "daily",
+      "notes": "Primary source - contains all fields"
+    },
+    {
+      "name": "sdn_csv",
+      "method": "GET",
+      "path": "https://www.treasury.gov/ofac/downloads/sdn.csv",
+      "description": "SDN list in CSV format (simplified)",
+      "update_frequency": "daily",
+      "notes": "Easier to parse than XML, fewer fields"
+    },
+    {
+      "name": "sdn_json",
+      "method": "GET",
+      "path": "https://data.treasury.gov/resource/g7xk-mnex.json",
+      "description": "SDN list via Socrata API (JSON)",
+      "update_frequency": "daily",
+      "base_url": "https://data.treasury.gov",
+      "parameters": {
+        "limit": {
+          "type": "integer",
+          "default": 1000,
+          "maximum": 50000,
+          "example": "?$limit=50000"
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0,
+          "description": "Pagination offset"
+        },
+        "where": {
+          "type": "string",
+          "description": "Socrata SQL-like filter",
+          "examples": {
+            "by_type": "?$where=sdn_type='Individual'",
+            "by_program": "?$where=program='SDGT'",
+            "by_program2": "?$where=program='IRAN'"
+          }
+        }
+      }
+    },
+    {
+      "name": "consolidated_list",
+      "method": "GET",
+      "path": "https://www.treasury.gov/ofac/downloads/consolidated/consolidated.xml",
+      "description": "Consolidated sanctions list (SDN + other lists)",
+      "update_frequency": "daily"
+    },
+    {
+      "name": "changes_feed",
+      "method": "GET",
+      "path": "https://www.treasury.gov/ofac/downloads/sdn_deltas.xml",
+      "description": "Only the changes since last update (delta file)",
+      "update_frequency": "daily",
+      "notes": "Use this for daily polling instead of full re-download"
+    }
+  ],
+  "available_fields": {
+    "core": [
+      "uid: Unique identifier for each SDN entry",
+      "lastName: Last name or entity name",
+      "firstName: First name (individuals only)",
+      "sdnType: Individual / Entity / Vessel / Aircraft",
+      "programs: Sanctions program (SDGT, IRAN, RUSSIA, DPRK, etc.)",
+      "title: Title or position",
+      "callSign: Call sign (vessels)",
+      "vesselType: Type of vessel",
+      "tonnage: Vessel tonnage",
+      "grossRegisteredTonnage: GRT",
+      "vesselFlag: Flag country",
+      "vesselOwner: Vessel owner",
+      "remarks: Additional notes"
+    ],
+    "aliases": [
+      "aka: Also Known As (alternative names)",
+      "type: weak / strong alias"
+    ],
+    "addresses": [
+      "address1, address2, address3",
+      "city",
+      "stateOrProvince",
+      "postalCode",
+      "country"
+    ],
+    "identifications": [
+      "idType: Passport / National ID / Tax ID / etc.",
+      "idNumber",
+      "idCountry",
+      "idExpirationDate"
+    ],
+    "dates": [
+      "dateOfBirthList: DOB for individuals",
+      "placeOfBirthList: POB for individuals",
+      "nationalityList: Nationality",
+      "citizenshipList: Citizenship"
+    ]
+  },
+  "sanctions_programs": {
+    "SDGT": "Global Terrorism",
+    "IRAN": "Iran sanctions",
+    "RUSSIA": "Russia/Ukraine sanctions",
+    "DPRK": "North Korea sanctions",
+    "CUBA": "Cuba sanctions",
+    "SYRIA": "Syria sanctions",
+    "VENEZUELA": "Venezuela sanctions",
+    "CYBER": "Cyber-related sanctions",
+    "GLOMAG": "Global Magnitsky (human rights)",
+    "CAATSA": "Countering America's Adversaries",
+    "ALL": "See https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information"
+  },
+  "sdn_types": [
+    "Individual",
+    "Entity",
+    "Vessel",
+    "Aircraft"
+  ],
+  "historical_depth": {
+    "start": "1994 (OFAC digital records)",
+    "end": "present",
+    "current_list_size": "~15,000+ entries",
+    "notes": "SDN list reflects CURRENT sanctions — not a historical time series. Use delta files to track changes over time."
+  },
+  "update_frequency": "daily (typically updated each business day)",
+  "latency": "Same day as Treasury announcement",
+  "rate_limits": {
+    "notes": "No rate limit on file downloads",
+    "recommended": "Download once per day maximum",
+    "file_sizes": {
+      "sdn_xml": "~15 MB",
+      "sdn_csv": "~5 MB",
+      "sdn_json": "Paginated via Socrata"
+    }
+  },
+  "error_handling": {
+    "404": "File temporarily unavailable - retry after 60s",
+    "503": "Treasury server overloaded - retry after 120s",
+    "notes": "Files are occasionally unavailable during updates (usually <30 min)"
+  },
+  "example_request": {
+    "description": "Download full SDN list as CSV",
+    "curl": "curl -O https://www.treasury.gov/ofac/downloads/sdn.csv",
+    "python": "import requests\nr = requests.get('https://www.treasury.gov/ofac/downloads/sdn.csv')\nwith open('sdn.csv', 'wb') as f:\n    f.write(r.content)\n"
+  },
+  "example_socrata": {
+    "description": "Get first 1000 sanctioned individuals under the IRAN program via JSON API",
+    "url": "https://data.treasury.gov/resource/g7xk-mnex.json?$where=program='IRAN' AND sdn_type='Individual'&$limit=1000"
+  },
+  "example_response_csv": {
+    "note": "CSV has no header row - columns are positional",
+    "columns": "ent_num, SDN_Name, SDN_Type, Program, Title, Call_Sign, Vess_type, Tonnage, GRT, Vess_flag, Vess_owner, Remarks",
+    "sample": "1365, AEROCARIBBEAN AIRLINES, Entity, CUBA, , , , , , , ,\n2086, ALPHA INTERNATIONAL IMPORT EXPORT, Entity, SDGT, , , , , , , ,\n"
+  },
+  "parsing_rules": {
+    "csv_format": {
+      "note": "CSV has NO header row",
+      "columns": {
+        "0": "ent_num (unique ID)",
+        "1": "SDN_Name",
+        "2": "SDN_Type (Individual/Entity/Vessel/Aircraft)",
+        "3": "Program",
+        "4": "Title",
+        "5": "Call_Sign",
+        "6": "Vess_type",
+        "7": "Tonnage",
+        "8": "GRT",
+        "9": "Vess_flag",
+        "10": "Vess_owner",
+        "11": "Remarks"
+      },
+      "null_value": "'-0-' means empty/null"
+    },
+    "xml_format": {
+      "library": "xml.etree.ElementTree or lxml",
+      "root": "sdnList",
+      "entry_tag": "sdnEntry",
+      "fields": "uid, lastName, firstName, sdnType, programList, akaList, addressList, idList"
+    },
+    "json_format": {
+      "library": "requests + json",
+      "pagination": "Use $limit and $offset for Socrata API"
+    }
+  },
+  "cli_parameters": {
+    "required": [],
+    "optional": {
+      "filter": {
+        "format": "key=value pairs, comma-separated",
+        "valid_keys": ["program", "sdn_type"],
+        "examples": {
+          "by_program": "--filter program=RUSSIA",
+          "by_program2": "--filter program=IRAN",
+          "by_type": "--filter sdn_type=individual",
+          "by_type2": "--filter sdn_type=vessel"
+        },
+        "note": "Only 'program' and 'sdn_type' are supported. The main sdn.csv has no usable country column, so country filtering is not available."
+      }
+    },
+    "example_call": "python agent.py --source ofac --filter \"program=RUSSIA\" --output-both"
+  },
+  "output_schema": {
+    "format": "CSV",
+    "fields": [
+      {
+        "name": "uid",
+        "type": "integer",
+        "description": "Unique OFAC identifier"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Full name or entity name"
+      },
+      {
+        "name": "sdn_type",
+        "type": "string",
+        "values": [
+          "Individual",
+          "Entity",
+          "Vessel",
+          "Aircraft"
+        ]
+      },
+      {
+        "name": "programs",
+        "type": "string",
+        "description": "Pipe-separated sanctions programs"
+      },
+      {
+        "name": "aliases",
+        "type": "string",
+        "description": "Pipe-separated alternative names"
+      },
+      {
+        "name": "country",
+        "type": "string"
+      },
+      {
+        "name": "date_of_birth",
+        "type": "string"
+      },
+      {
+        "name": "nationality",
+        "type": "string"
+      },
+      {
+        "name": "id_type",
+        "type": "string"
+      },
+      {
+        "name": "id_number",
+        "type": "string"
+      },
+      {
+        "name": "remarks",
+        "type": "string"
+      },
+      {
+        "name": "date_added",
+        "type": "date",
+        "notes": "Track via delta files"
+      }
+    ]
+  },
+  "storage": {
+    "path": "hdd/ofac/sdn_{YYYY-MM-DD}.csv",
+    "format": "CSV",
+    "partitioning": "by_date (daily snapshot)",
+    "notes": "Save daily snapshots to track changes over time"
+  },
+  "agent_instructions": "To get the current OFAC SDN list:\n1. Download CSV: GET https://www.treasury.gov/ofac/downloads/sdn.csv\n2. Parse with csv.reader (NO header row - positional columns)\n3. Replace '-0-' with None/empty for null values\n4. Save as dated snapshot: sdn_YYYY-MM-DD.csv\n\nTo track changes over time:\n1. Download delta file daily: sdn_deltas.xml\n2. Parse additions and removals\n3. Append to change log CSV\n\nTo search/filter:\n- Use Socrata JSON API for filtered queries\n- Filter by program: ?$where=program='IRAN'\n- Filter by type: ?$where=sdn_type='Individual'\n- Paginate with $limit=10000&$offset=0\n\nTo get full data with all fields (aliases, IDs, addresses):\n- Use XML format (sdn.xml) - most complete\n- Parse with lxml for best performance on ~15MB file\n"
+}

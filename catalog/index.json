@@ -1,0 +1,164 @@
+{
+  "catalog_version": "1.0.0",
+  "last_updated": "2026-06-18",
+  "description": "Master index of all available data sources. AI agent reads this file first to discover what data exists and how to fetch it.",
+  "total_sources": 5,
+  "agent_usage": {
+    "step_1": "Read this index.json to discover available sources",
+    "step_2": "Read the specific source recipe (e.g. catalog/imf.json) for full endpoint details",
+    "step_3": "Call agent.py with the right parameters",
+    "step_4": "Get back CSV and/or JSON output"
+  },
+  "sources": [
+    {
+      "id": "wikipedia",
+      "name": "Wikipedia Pageviews API",
+      "category": "web_traffic",
+      "description": "Daily pageview statistics for ANY Wikipedia article. Track public interest in any topic over time.",
+      "recipe": "catalog/wikipedia.json",
+      "authentication": "none",
+      "status": "active",
+      "historical_depth": "2015-07-01 to present",
+      "update_frequency": "daily",
+      "what_you_can_get": [
+        "Daily pageviews for any Wikipedia article",
+        "Top 1000 most viewed articles per day",
+        "Desktop vs mobile traffic split",
+        "Human vs bot traffic split",
+        "Any language Wikipedia (300+ languages)"
+      ],
+      "example_questions": [
+        "How much public interest is there in 'Mortgage rates' over time?",
+        "Did interest in 'Inflation' spike during 2022?",
+        "Which economic topics are trending on Wikipedia this week?"
+      ],
+      "agent_call": "python agent.py --source wikipedia --articles \"Inflation,Housing_market\" --start 2020-01-01 --end 2024-12-31 --output-both"
+    },
+    {
+      "id": "imf",
+      "name": "IMF Data (International Monetary Fund)",
+      "category": "macroeconomic",
+      "description": "Global economic and financial statistics across 190+ countries. GDP, inflation, unemployment, debt, current account, and more.",
+      "recipe": "catalog/imf.json",
+      "authentication": "none",
+      "status": "active",
+      "historical_depth": "1980 to present (some series from 1948)",
+      "update_frequency": "monthly / bi-annual (varies by indicator)",
+      "what_you_can_get": [
+        "GDP growth rate for any country",
+        "Inflation rate (CPI) for any country",
+        "Unemployment rate for any country",
+        "Government debt % of GDP",
+        "Current account balance",
+        "Exchange rates",
+        "190+ countries covered"
+      ],
+      "example_questions": [
+        "What is the GDP growth trajectory of emerging markets since 2000?",
+        "Which countries have the highest debt-to-GDP ratios?",
+        "How does US unemployment compare to EU countries historically?"
+      ],
+      "agent_call": "python agent.py --source imf --indicators \"NGDP_RPCH,LUR\" --countries \"US,GB,DE,FR,JP\" --start 2000 --output-both"
+    },
+    {
+      "id": "worldbank",
+      "name": "World Bank Indicators API",
+      "category": "macroeconomic",
+      "description": "Global development indicators across 200+ countries. Broader than IMF — covers education, health, environment, infrastructure, and more.",
+      "recipe": "catalog/worldbank.json",
+      "authentication": "none",
+      "status": "active",
+      "historical_depth": "1960 to present",
+      "update_frequency": "annual",
+      "what_you_can_get": [
+        "GDP and economic indicators",
+        "Population and demographics",
+        "Education and literacy rates",
+        "Health expenditure and life expectancy",
+        "CO2 emissions and environmental data",
+        "FDI and trade flows",
+        "Infrastructure access (electricity, internet)",
+        "200+ countries, 1000+ indicators"
+      ],
+      "example_questions": [
+        "How has CO2 emissions per capita changed by country since 1990?",
+        "What is the correlation between education spending and GDP growth?",
+        "Which countries have the highest FDI inflows relative to GDP?"
+      ],
+      "agent_call": "python agent.py --source worldbank --indicators \"NY.GDP.MKTP.CD,FP.CPI.TOTL.ZG\" --countries \"all\" --start 2000 --output-both"
+    },
+    {
+      "id": "arxiv",
+      "name": "arXiv API",
+      "category": "research_publications",
+      "description": "Open access research papers across AI, economics, finance, physics, math, and more. Track publication cadence, emerging topics, and research trends.",
+      "recipe": "catalog/arxiv.json",
+      "authentication": "none",
+      "status": "active",
+      "historical_depth": "1991-08-01 to present",
+      "update_frequency": "daily",
+      "what_you_can_get": [
+        "Paper titles, abstracts, authors, dates",
+        "Publication count by category per month/year",
+        "Word count from titles and abstracts",
+        "Research trends by keyword",
+        "Any arXiv category (CS, Economics, Finance, Physics, Math, etc.)",
+        "Author publication history"
+      ],
+      "example_questions": [
+        "How many AI papers mention 'housing market' in the abstract?",
+        "Is research on 'inflation forecasting' accelerating?",
+        "What are the most published topics in quantitative finance this year?"
+      ],
+      "agent_call": "python agent.py --source arxiv --category \"cs.AI\" --keyword \"housing\" --start 2020-01-01 --output-both"
+    },
+    {
+      "id": "ofac",
+      "name": "OFAC SDN List",
+      "category": "sanctions_compliance",
+      "description": "US Treasury Specially Designated Nationals and Blocked Persons List. Complete sanctions list updated daily.",
+      "recipe": "catalog/ofac.json",
+      "authentication": "none",
+      "status": "active",
+      "historical_depth": "Current list + daily deltas from 1994",
+      "update_frequency": "daily",
+      "what_you_can_get": [
+        "Full list of sanctioned individuals, entities, vessels, aircraft",
+        "Sanctions program (IRAN, RUSSIA, DPRK, SDGT, etc.)",
+        "Aliases and alternative names",
+        "Addresses and nationalities",
+        "Identification documents",
+        "Daily delta (additions and removals)",
+        "~15,000+ active entries"
+      ],
+      "example_questions": [
+        "How many Russian entities have been added to SDN list since 2022?",
+        "Which sanctions programs have grown the most in the last year?",
+        "Are there any SDN entries linked to a specific country or sector?"
+      ],
+      "agent_call": "python agent.py --source ofac --filter \"program=RUSSIA\" --output-both"
+    }
+  ],
+  "categories": {
+    "web_traffic": ["wikipedia"],
+    "macroeconomic": ["imf", "worldbank"],
+    "research_publications": ["arxiv"],
+    "sanctions_compliance": ["ofac"]
+  },
+  "coming_soon": [
+    "FRED (Federal Reserve)",
+    "BLS (Bureau of Labor Statistics)",
+    "SEC EDGAR",
+    "GDELT (News/Events)",
+    "NOAA Weather Data"
+  ],
+  "imf_to_worldbank_mapping": {
+    "_note": "IMF DataMapper currently blocks automated requests. When --source imf is unavailable, fall back to --source worldbank using the equivalent indicator code below.",
+    "NGDP_RPCH": "NY.GDP.MKTP.KD.ZG",
+    "PCPIPCH": "FP.CPI.TOTL.ZG",
+    "LUR": "SL.UEM.TOTL.ZS",
+    "BCA_NGDPD": "BN.CAB.XOKA.GD.ZS",
+    "GGXWDG_NGDP": "GC.DOD.TOTL.GD.ZS",
+    "NGDPDPC": "NY.GDP.PCAP.CD"
+  }
+}
