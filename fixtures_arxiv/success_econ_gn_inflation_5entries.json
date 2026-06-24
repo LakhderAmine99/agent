@@ -1,0 +1,80 @@
+[
+  {
+    "id": "http://arxiv.org/abs/2606.22337v2",
+    "title": "Theorist Toolbox: Tools for Agent Based LLM-assisted economic theory Research",
+    "summary": "Empirical economists often start their projects with a toolbox. Shared packages, replication archives, and circulated guides shorten the time between and idea and a rough initial draft. Theorists, on ",
+    "published": "2026-06-21T05:03:37Z",
+    "updated": "2026-06-23T07:45:44Z",
+    "authors": [
+      "Moran Koren"
+    ],
+    "tags": [
+      "econ.TH",
+      "cs.GT",
+      "econ.GN"
+    ]
+  },
+  {
+    "id": "http://arxiv.org/abs/2606.20041v1",
+    "title": "AI Economist Agent: An Agentic Framework for Model-Grounded Economic Analysis with RAG, Knowledge Graphs, and Large Language Models",
+    "summary": "We propose a model-grounded RAG-based AI economist with an agentic framework for economic scenario analysis using large language models (LLMs) and knowledge graphs. While LLMs can generate fluent econ",
+    "published": "2026-06-18T10:18:03Z",
+    "updated": "2026-06-18T10:18:03Z",
+    "authors": [
+      "Masahiro Kato"
+    ],
+    "tags": [
+      "econ.GN",
+      "cs.AI",
+      "cs.LG",
+      "q-fin.GN"
+    ]
+  },
+  {
+    "id": "http://arxiv.org/abs/2606.09944v1",
+    "title": "GAGI: A Gini-Adjusted GDP-per-Capita Index for Distribution-Aware Macroeconomic Welfare Monitoring",
+    "summary": "GDP per capita is the default lens through which governibng bodies track the economic prosperity and consequences of economic events , yet it is blind to two first-order determinants of lived prosperi",
+    "published": "2026-06-08T03:30:20Z",
+    "updated": "2026-06-08T03:30:20Z",
+    "authors": [
+      "Sivasathivel Kandasamy"
+    ],
+    "tags": [
+      "econ.GN",
+      "cs.AI"
+    ]
+  },
+  {
+    "id": "http://arxiv.org/abs/2605.27265v2",
+    "title": "Quantifying Social Inflation in Liability Insurance with Advanced Statistical Methods",
+    "summary": "Social inflation, which is the rise in liability claim costs beyond general economic inflation, has become a major concern for insurers and reinsurers, yet it is difficult to quantify because litigati",
+    "published": "2026-05-26T16:42:07Z",
+    "updated": "2026-05-28T13:57:04Z",
+    "authors": [
+      "Tsz Chai Fung",
+      "Lie Ma",
+      "Liang Peng"
+    ],
+    "tags": [
+      "econ.GN",
+      "stat.AP",
+      "stat.ME"
+    ]
+  },
+  {
+    "id": "http://arxiv.org/abs/2605.24356v1",
+    "title": "Contested Temporalities in Critical Minerals and Resource Extraction for Electric Vehicles",
+    "summary": "The global push for electric vehicles (EVs) has sharply increased demand for critical minerals such as cobalt and lithium, creating a tension between rapid industrial growth and long-term sustainabili",
+    "published": "2026-05-23T02:35:08Z",
+    "updated": "2026-05-23T02:35:08Z",
+    "authors": [
+      "Joseph Nyangon"
+    ],
+    "tags": [
+      "eess.SY",
+      "econ.GN",
+      "stat.AP",
+      "stat.OT"
+    ]
+  }
+]

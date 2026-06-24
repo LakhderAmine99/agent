@@ -1,0 +1,64 @@
+COMMAND:
+C:\Users\aloha\AppData\Local\Python\pythoncore-3.14-64\python.exe agent.py --source ofac --filter program=IRAN --stdout-json
+
+EXIT CODE: 0
+
+=== STDERR ===
+
+============================================================
+Running: OFAC SDN List (Office of Foreign Assets Control)
+============================================================
+  ofac socrata: Expecting value: line 1 column 1 (char 0)
+  Socrata returned no results, trying CSV bulk download...
+  CSV bulk: 2375 entries after filter
+
+Done: 2375 records
+
+
+=== STDOUT ===
+[
+  {
+    "uid": "4632",
+    "name": "BANK MARKAZI JOMHOURI ISLAMI IRAN",
+    "sdn_type": "",
+    "programs": "IRAN | SDGT | IRGC | IFSR",
+    "aliases": "",
+    "country": "",
+    "date_of_birth": "",
+    "nationality": "",
+    "id_type": "",
+    "id_number": "",
+    "remarks": "Additional Sanctions Information - Subject to Secondary Sanctions; Secondary sanctions risk: section 1(b) of Executive Order 13224, as amended by Executive Order 13886; Digital Currency Address - TRX TNiq9AXBp9EjUqhDhrwrfvAA8U3GUQZH81; alt. Digital Currency Address - TRX TTiDLWE6fZK8okMJv6ijg42yrH6W2pjSr9; Linked To: ISLAMIC REVOLUTIONARY GUARD CORPS (IRGC)-QODS FORCE; Linked To: HIZBALLAH.",
+    "date_added": ""
+  },
+  {
+    "uid": "4633",
+    "name": "BANK MASKAN",
+    "sdn_type": "",
+    "programs": "IRAN | IRAN-EO13902",
+    "aliases": "",
+    "country": "",
+    "date_of_birth": "",
+    "nationality": "",
+    "id_type": "",
+    "id_number": "",
+    "remarks": "Website www.bank-maskan.ir; Additional Sanctions Information - Subject to Secondary Sanctions; all offices worldwide.",
+    "date_added": ""
+  },
+  {
+    "uid": "4635",
+    "name": "BANK REFAH KARGARAN",
+    "sdn_type": "",
+    "programs": "IRAN | IRAN-EO13902",
+    "aliases": "",
+    "country": "",
+    "date_of_birth": "",
+    "nationality": "",
+    "id_type": "",
+    "id_number": "",
+    "remarks": "Website www.bankrefah.ir; alt. Website www.refah-bank.ir; Additional Sanctions Information - Subject to Secondary Sanctions; all offices worldwide.",
+    "date_added": ""
+  }
+]
+[stdout truncated: showing 3 of 2375 records]
+

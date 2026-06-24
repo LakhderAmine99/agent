@@ -1,0 +1,56 @@
+COMMAND:
+C:\Users\aloha\AppData\Local\Python\pythoncore-3.14-64\python.exe agent.py --source arxiv --category econ.GN --keyword inflation --max-results 10 --stdout-json
+
+EXIT CODE: 0
+
+=== STDERR ===
+
+============================================================
+Running: arXiv API
+============================================================
+  fetched 10 papers so far
+
+Done: 10 records
+
+
+=== STDOUT ===
+[
+  {
+    "arxiv_id": "2606.22337v2",
+    "title": "Theorist Toolbox: Tools for Agent Based LLM-assisted economic theory Research",
+    "abstract": "Empirical economists often start their projects with a toolbox. Shared packages, replication archives, and circulated guides shorten the time between and idea and a rough initial draft. Theorists, on the other-hand, largely start from a blank page. By 2026, large language models can a produce and check nontrivial mathematics. The can also hallucinate and write wrong claims very convincingly. The current bottleneck on machine-assisted theory is no longer production but trust: a model will claim t",
+    "submitted_date": "2026-06-21",
+    "updated_date": "2026-06-23",
+    "primary_category": "econ.TH",
+    "all_categories": "econ.TH | cs.GT | econ.GN",
+    "title_word_count": 10,
+    "abstract_word_count": 249,
+    "authors": "Moran Koren"
+  },
+  {
+    "arxiv_id": "2606.20041v1",
+    "title": "AI Economist Agent: An Agentic Framework for Model-Grounded Economic Analysis with RAG, Knowledge Graphs, and Large Language Models",
+    "abstract": "We propose a model-grounded RAG-based AI economist with an agentic framework for economic scenario analysis using large language models (LLMs) and knowledge graphs. While LLMs can generate fluent economic narratives, economists are often required to make economic claims grounded by economic theory and real-world data. Based on this motivation, this study proposes an RAG-based AI economist, which utilizes knowledge graphs including economic data and theory and LLM-based agents to plan the analysi",
+    "submitted_date": "2026-06-18",
+    "updated_date": "2026-06-18",
+    "primary_category": "econ.GN",
+    "all_categories": "econ.GN | cs.AI | cs.LG | q-fin.GN",
+    "title_word_count": 18,
+    "abstract_word_count": 170,
+    "authors": "Masahiro Kato"
+  },
+  {
+    "arxiv_id": "2606.09944v1",
+    "title": "GAGI: A Gini-Adjusted GDP-per-Capita Index for Distribution-Aware Macroeconomic Welfare Monitoring",
+    "abstract": "GDP per capita is the default lens through which governibng bodies track the economic prosperity and consequences of economic events , yet it is blind to two first-order determinants of lived prosperity: income/wealth distribution and inflation impact. Inequality-adjusted income measures are themselves not new but What is missing from the macroeconomic monitoring toolkit specifically is not a welfare concept but an operational monitoring trigger: a statistic minimal enough to compute annually fr",
+    "submitted_date": "2026-06-08",
+    "updated_date": "2026-06-08",
+    "primary_category": "econ.GN",
+    "all_categories": "econ.GN | cs.AI",
+    "title_word_count": 10,
+    "abstract_word_count": 246,
+    "authors": "Sivasathivel Kandasamy"
+  }
+]
+[stdout truncated: showing 3 of 10 records]
+

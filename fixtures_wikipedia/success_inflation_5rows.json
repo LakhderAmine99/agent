@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "project": "en.wikipedia",
+      "article": "Inflation",
+      "granularity": "daily",
+      "timestamp": "2023010100",
+      "access": "all-access",
+      "agent": "all-agents",
+      "views": 2030
+    },
+    {
+      "project": "en.wikipedia",
+      "article": "Inflation",
+      "granularity": "daily",
+      "timestamp": "2023010200",
+      "access": "all-access",
+      "agent": "all-agents",
+      "views": 2826
+    },
+    {
+      "project": "en.wikipedia",
+      "article": "Inflation",
+      "granularity": "daily",
+      "timestamp": "2023010300",
+      "access": "all-access",
+      "agent": "all-agents",
+      "views": 3064
+    },
+    {
+      "project": "en.wikipedia",
+      "article": "Inflation",
+      "granularity": "daily",
+      "timestamp": "2023010400",
+      "access": "all-access",
+      "agent": "all-agents",
+      "views": 3072
+    },
+    {
+      "project": "en.wikipedia",
+      "article": "Inflation",
+      "granularity": "daily",
+      "timestamp": "2023010500",
+      "access": "all-access",
+      "agent": "all-agents",
+      "views": 3386
+    }
+  ]
+}

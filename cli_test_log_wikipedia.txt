@@ -1,0 +1,44 @@
+COMMAND:
+C:\Users\aloha\AppData\Local\Python\pythoncore-3.14-64\python.exe agent.py --source wikipedia --articles Inflation --start 2023-01-01 --end 2023-01-31 --stdout-json
+
+EXIT CODE: 0
+
+=== STDERR ===
+
+============================================================
+Running: Wikipedia Pageviews API
+============================================================
+  Inflation: 31 records
+
+Done: 31 records
+
+
+=== STDOUT ===
+[
+  {
+    "article": "Inflation",
+    "date": "2023-01-01",
+    "views": 2030,
+    "project": "en.wikipedia",
+    "access": "all-access",
+    "agent": "all-agents"
+  },
+  {
+    "article": "Inflation",
+    "date": "2023-01-02",
+    "views": 2826,
+    "project": "en.wikipedia",
+    "access": "all-access",
+    "agent": "all-agents"
+  },
+  {
+    "article": "Inflation",
+    "date": "2023-01-03",
+    "views": 3064,
+    "project": "en.wikipedia",
+    "access": "all-access",
+    "agent": "all-agents"
+  }
+]
+[stdout truncated: showing 3 of 31 records]
+

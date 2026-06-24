@@ -1,0 +1,44 @@
+COMMAND:
+C:\Users\aloha\AppData\Local\Python\pythoncore-3.14-64\python.exe agent.py --source worldbank --indicators NY.GDP.MKTP.KD.ZG --countries US,GB --start 2020 --stdout-json
+
+EXIT CODE: 0
+
+=== STDERR ===
+
+============================================================
+Running: World Bank Indicators API
+============================================================
+  GDP Growth Rate %: 10 records
+
+Done: 10 records
+
+
+=== STDOUT ===
+[
+  {
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "indicator_code": "NY.GDP.MKTP.KD.ZG",
+    "indicator_name": "GDP Growth Rate %",
+    "year": "2024",
+    "value": 1.1264226705118
+  },
+  {
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "indicator_code": "NY.GDP.MKTP.KD.ZG",
+    "indicator_name": "GDP Growth Rate %",
+    "year": "2023",
+    "value": 0.271650048355255
+  },
+  {
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "indicator_code": "NY.GDP.MKTP.KD.ZG",
+    "indicator_name": "GDP Growth Rate %",
+    "year": "2022",
+    "value": 5.14970388522993
+  }
+]
+[stdout truncated: showing 3 of 10 records]
+

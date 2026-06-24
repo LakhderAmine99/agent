@@ -1,0 +1,11 @@
+{
+  "status_code": 404,
+  "body": {
+    "detail": "The date(s) you used are valid, but we either do not have data for those date(s), or the project you asked for is not loaded yet. Please check documentation for more information",
+    "method": "get",
+    "status": 404,
+    "title": "Not Found",
+    "type": "about:blank",
+    "uri": "/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/ThisArticleDefinitelyDoesNotExist_XYZ123/daily/20230101/20230105"
+  }
+}
